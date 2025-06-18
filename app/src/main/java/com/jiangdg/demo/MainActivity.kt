@@ -16,13 +16,13 @@
 package com.jiangdg.demo
 
 import android.Manifest.permission.*
+import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.PermissionChecker
 import androidx.fragment.app.Fragment
-import com.gyf.immersionbar.ImmersionBar
 import com.jiangdg.ausbc.utils.ToastUtils
 import com.jiangdg.ausbc.utils.Utils
 import com.jiangdg.demo.databinding.ActivityMainBinding
@@ -34,7 +34,6 @@ import com.jiangdg.demo.databinding.ActivityMainBinding
  */
 class MainActivity : AppCompatActivity() {
     private var mWakeLock: PowerManager.WakeLock? = null
-    private var immersionBar: ImmersionBar? = null
     private lateinit var viewBinding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -112,17 +111,18 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        immersionBar= null
     }
 
+    /**
+     * 设置状态栏样式
+     * 使用原生Android API替代ImmersionBar
+     */
     private fun setStatusBar() {
-        immersionBar = ImmersionBar.with(this)
-            .statusBarDarkFont(false)
-            .statusBarColor(R.color.black)
-            .navigationBarColor(R.color.black)
-            .fitsSystemWindows(true)
-            .keyboardEnable(true)
-        immersionBar?.init()
+        // 设置状态栏和导航栏颜色
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.statusBarColor = getColor(android.R.color.black)
+            window.navigationBarColor = getColor(android.R.color.black)
+        }
     }
 
     companion object {
